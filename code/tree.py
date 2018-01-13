@@ -126,7 +126,47 @@ class RSTTree(object):
         """ Get the RST tree
         """
         return self.tree
+        
+    def get(self, textSpan):
+        """ Return node containing text span
+        """
+        if self.tree:
+            matchingNode = self._get(textSpan,self.tree)
+            if matchingNode:
+                return matchingNode
+            else:
+                return None
+        else:
+            return None
 
+    def _get(self, textSpan, currentNode):
+        if not currentNode:
+            return None
+        elif isLeafNode(currentNode):
+            return currentNode
+        elif equal(currentNode.text, textSpan):
+            return currentNode
+        elif greaterThan(currentNode.rnode.text, textSpan):
+            return self._get(textSpan,currentNode.lnode)
+        else:
+            return self._get(textSpan,currentNode.rnode)
+
+def equal(textList, textSpan):
+    if(textList[0] == int(textSpan[0]) and
+        textList[len(textList)-1] == int(textSpan[1])):
+        return True
+    return False
+    
+def greaterThan(textList, textSpan):
+    if(textList[0] > int(textSpan[0])):
+        return True
+    return False
+        
+def isLeafNode(currentNode):
+    if(currentNode.eduspan[0] == currentNode.eduspan[1]):
+        return True
+    return False
+        
 def test():
     fdis = "../data/training/file2.dis"
     fmerge = "../data/training/file2.merge"
